@@ -38,7 +38,24 @@ You need a database to store submissions and scores. We recommend **Neon.tech** 
 
 ---
 
-## 3. Admin Access Key (Command Center)
+## 🖼️ 3. Cloud Image Storage (Cloudinary)
+To store participants' images reliably in the cloud:
+
+1. **Go to**: [Cloudinary](https://cloudinary.com/console)
+2. **Sign up**: Register for a Free account.
+3. **Get Dashboard Details**: 
+   - Look for **"Product Environment Credentials"** on your dashboard.
+   - You need: `Cloud Name`, `API Key`, and `API Secret`.
+4. **Paste into `.env`**:
+   ```env
+   CLOUDINARY_CLOUD_NAME="your_cloud_name"
+   CLOUDINARY_API_KEY="your_api_key"
+   CLOUDINARY_API_SECRET="your_api_secret"
+   ```
+
+---
+
+## 🛡️ 4. Admin Access Key (Command Center)
 This is a password YOU choose to protect the /admin dashboard.
 
 1. **Think of a secret**: e.g., `war-room-2026`.

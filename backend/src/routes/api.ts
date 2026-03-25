@@ -5,12 +5,12 @@ import { prisma } from '../index';
 import multer from 'multer';
 import { AdminController } from '../controllers/adminController';
 import { adminAuth } from '../middleware/authMiddleware';
+import { parser } from '../utils/cloudinary';
 
 const router = Router();
-const upload = multer({ dest: 'uploads/' });
 
 // Submission Routes
-router.post('/submit/round1', upload.single('image'), SubmissionController.submitRound1);
+router.post('/submit/round1', parser.single('image'), SubmissionController.submitRound1);
 router.post('/submit/round2', SubmissionController.submitRound2);
 router.post('/submit/round3', SubmissionController.submitRound3);
 

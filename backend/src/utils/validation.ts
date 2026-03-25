@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const round1Schema = z.object({
   user_id: z.string().min(1, "User ID is required"),
   prompt_text: z.string().min(5, "Prompt must be at least 5 characters"),
-  image_url: z.string().url("A valid image URL is required")
+  image_url: z.string().url().optional() // Handled by multer/cloudinary
 });
 
 export const round2Schema = z.object({

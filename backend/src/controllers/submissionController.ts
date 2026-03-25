@@ -9,7 +9,11 @@ export class SubmissionController {
     const validated = round1Schema.safeParse(req.body);
     if (!validated.success) return res.status(400).json({ error: validated.error.format() });
 
-    const { user_id, prompt_text, image_url } = validated.data;
+    const { user_id, prompt_text } = validated.data;
+    const image_url = (req.file as any)?.path; // Cloudinary URL
+    
+    if (!image_url) return res.status(400).json({ error: "Image transmission failed (Cloudinary error)" });
+
     const ip_address = req.ip;
     
     const isActive = await RoundService.isRoundActionable(1);
