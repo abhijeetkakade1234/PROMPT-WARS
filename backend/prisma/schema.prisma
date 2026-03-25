@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int           @id @default(autoincrement())
+  name         String
+  email        String        @unique
+  role         String        @default("user")
+  submissions  Submission[]
+  leaderboard  Leaderboard?
+}
+
+model Round {
+  id          Int          @id @default(autoincrement())
+  name        String
+  description String?      @default("No description provided.")
+  is_active   Boolean      @default(false)
+  is_locked   Boolean      @default(false)
+  submissions Submission[]
+}
+
+model Submission {
+  id                Int                @id @default(autoincrement())
+  user              User               @relation(fields: [user_id], references: [id])
+  user_id           Int
+  round             Round              @relation(fields: [round_id], references: [id])
+  round_id          Int
+  ip_address        String?            // Track IP for anti-spam
+  is_evaluated      Boolean            @default(false)
+  created_at        DateTime           @default(now())
+  round1_data       Round1Submission?
+  round2_data       Round2Submission?
+  round3_data       Round3Submission?
+  scores            Score[]
+}
+
+model Round1Submission {
+  submission_id Int        @id
+  submission    Submission @relation(fields: [submission_id], references: [id])
+  prompt_text   String
+  image_url     String
+}
+
+model Round2Submission {
+  submission_id Int        @id
+  submission    Submission @relation(fields: [submission_id], references: [id])
+  prompt_text   String
+  text_output   String
+}
+
+model Round3Submission {
+  submission_id Int        @id
+  submission    Submission @relation(fields: [submission_id], references: [id])
+  prompt_1      String
+  prompt_2      String
+}
+
+model Score {
+  id             Int        @id @default(autoincrement())
+  submission     Submission @relation(fields: [submission_id], references: [id])
+  submission_id  Int
+  total_score    Float
+  breakdown_json Json
+}
+
+model Leaderboard {
+  user        User  @id @relation(fields: [user_id], references: [id])
+  user_id     Int   @unique
+  total_score Float @default(0)
+}

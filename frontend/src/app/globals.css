@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+:root {
+  --background: #020617;
+  --foreground: #f8fafc;
+  --neon-blue: #00d2ff;
+  --neon-purple: #9d50bb;
+  --star-wars-yellow: #ffe81f;
+}
+
+@theme {
+  --color-neon-blue: var(--neon-blue);
+  --color-neon-purple: var(--neon-purple);
+  --color-star-wars-yellow: var(--star-wars-yellow);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Subtle Starfield Effect */
+.starfield {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+  z-index: -1;
+}
+
+/* Glowing Border Utility */
+.glow-border {
+  border: 1px solid rgba(0, 210, 255, 0.3);
+  box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.glow-border:hover {
+  border-color: var(--neon-blue);
+  box-shadow: 0 0 25px rgba(0, 210, 255, 0.4);
+}

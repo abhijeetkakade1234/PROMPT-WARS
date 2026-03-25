@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.env
+*.log
+package-lock.json
+build/
+.prisma/
+prisma/client/
+uploads/
