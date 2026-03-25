@@ -24,13 +24,14 @@
     "multer": "^2.1.1",
     "pg": "^8.20.0",
     "zod": "^4.3.6",
-    "cloudinary": "^2.5.1",
-    "multer-storage-cloudinary": "^5.0.0"
+    "cloudinary": "^1.41.0",
+    "multer-storage-cloudinary": "^4.0.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/multer": "^2.1.0",
+    "@types/multer-storage-cloudinary": "^4.0.0",
     "@types/node": "^25.5.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
