@@ -33,6 +33,10 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${orbitron.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
+      <head>
+        <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/star-jedi" />
+        <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/sf-distant-galaxy" />
+      </head>
       <body className="min-h-full flex flex-col bg-[#020617] text-white selection:bg-star-wars-yellow selection:text-black font-sans">
         {children}
       </body>

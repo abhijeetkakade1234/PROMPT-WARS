@@ -1,6 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
 
 :root {
   --background: #020617;
@@ -14,6 +13,12 @@
   --color-neon-blue: var(--neon-blue);
   --color-neon-purple: var(--neon-purple);
   --color-star-wars-yellow: var(--star-wars-yellow);
+
+  --font-star-jedi: "Star Jedi", sans-serif;
+  --font-sf-distant: "SF Distant Galaxy", sans-serif;
+  --font-orbitron: var(--font-orbitron), sans-serif;
+  --font-sans: var(--font-inter), sans-serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
 }
 
 body {
