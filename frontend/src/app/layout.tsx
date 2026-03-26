@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono, Orbitron } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+});
+
+const orbitron = Orbitron({
+  variable: "--font-orbitron",
+  subsets: ["latin"],
+  weight: ["400", "900"],
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -25,9 +31,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${orbitron.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#020617] text-white selection:bg-star-wars-yellow selection:text-black">
+      <body className="min-h-full flex flex-col bg-[#020617] text-white selection:bg-star-wars-yellow selection:text-black font-sans">
         {children}
       </body>
     </html>

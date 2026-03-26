@@ -21,7 +21,7 @@ export default function RoundCard({ round, onEnter }: RoundCardProps) {
         </span>
       </div>
 
-      <h3 className="text-4xl font-black uppercase mb-4 text-white tracking-tighter">
+      <h3 className="text-4xl font-black uppercase mb-4 text-white tracking-tighter font-orbitron">
         {round.name}
       </h3>
 

@@ -28,9 +28,9 @@ export default function SubmissionModal({ roundId, onClose, onSubmit }: Submissi
           [ Close ]
         </button>
 
-        <header className="mb-8">
-          <span className="text-[10px] text-neon-blue uppercase tracking-[0.4em] font-bold">Submission Protocol</span>
-          <h2 className="text-3xl font-black text-white uppercase mt-2">Round 0{roundId}</h2>
+        <header className="mb-8 font-orbitron">
+          <span className="text-[10px] text-neon-blue uppercase tracking-[0.4em] font-black">Submission Protocol</span>
+          <h2 className="text-3xl font-black text-white uppercase mt-2 tracking-tighter">Round 0{roundId}</h2>
         </header>
 
         <form onSubmit={handleSubmit} className="space-y-6">

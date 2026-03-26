@@ -40,8 +40,8 @@ export default function LeaderboardPage() {
       </header>
 
       <main className="max-w-4xl mx-auto pt-20 relative z-10">
-        <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-7xl font-black mb-4 uppercase tracking-tighter skew-x-[-12deg] text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-500">
+        <div className="text-center mb-16 font-orbitron">
+          <h1 className="text-5xl md:text-8xl font-black mb-4 uppercase tracking-tighter italic text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-500">
             Galactic Hall
           </h1>
           <p className="text-slate-500 uppercase tracking-[0.5em] text-[10px]">The top 1% of prompt engineers</p>

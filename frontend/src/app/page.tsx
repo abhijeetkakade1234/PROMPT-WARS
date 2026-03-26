@@ -8,7 +8,7 @@ export default function LandingPage() {
       
       {/* Cinematic Logo Only */}
       <div className="relative z-10 flex flex-col items-center">
-        <h1 className="text-8xl md:text-[160px] font-black uppercase tracking-[-0.05em] text-white italic drop-shadow-[0_0_20px_rgba(255,255,255,0.4)] text-center">
+        <h1 className="text-8xl md:text-[180px] font-black uppercase tracking-tighter text-white italic drop-shadow-[0_0_20px_rgba(255,255,255,0.4)] text-center font-orbitron leading-[0.8] mb-8">
           PROMPT<br/>WARS
         </h1>
         

@@ -13,7 +13,9 @@ module.exports = {
         'star-wars-yellow': '#FFE81F',
       },
       fontFamily: {
-        'mono': ['JetBrains Mono', 'monospace'],
+        'orbitron': ['var(--font-orbitron)', 'sans-serif'],
+        'sans': ['var(--font-inter)', 'sans-serif'],
+        'mono': ['var(--font-jetbrains-mono)', 'monospace'],
       },
     },
   },
