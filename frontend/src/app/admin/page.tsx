@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Starfield from '@/components/Starfield';
 
 const API_BASE = 'http://localhost:5000/api';
 
@@ -87,8 +88,8 @@ export default function AdminPage() {
 
   if (!adminKey) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-black p-6">
-        <div className="starfield" />
+      <div className="min-h-screen flex flex-col items-center justify-center bg-transparent p-6 relative overflow-hidden">
+        <Starfield />
         <div className="w-full max-w-md bg-slate-900/50 border border-neon-blue/30 p-12 text-center relative z-10 backdrop-blur-xl">
           <h2 className="text-star-wars-yellow text-2xl font-black uppercase tracking-tighter mb-8 italic">Authorization Required</h2>
           <p className="text-slate-500 text-[10px] uppercase tracking-[0.3em] mb-12">Enter Galactic Admin Key to proceed</p>
@@ -117,8 +118,8 @@ export default function AdminPage() {
   if (loading) return <div className="min-h-screen flex items-center justify-center text-star-wars-yellow uppercase tracking-widest bg-black">Initializing Galactic Command...</div>;
 
   return (
-    <div className="min-h-screen p-12 bg-black text-white font-mono overflow-x-hidden relative">
-      <div className="starfield" />
+    <div className="min-h-screen p-12 text-white font-mono overflow-x-hidden relative">
+      <Starfield />
       
       <header className="mb-12 border-b border-white/10 pb-6">
         <h1 className="text-4xl font-black text-neon-blue uppercase tracking-tighter">Admin // Command Center</h1>

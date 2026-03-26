@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
+import Starfield from '@/components/Starfield';
 
 const API_BASE = 'http://localhost:5000/api';
 
@@ -28,8 +29,8 @@ export default function LeaderboardPage() {
   if (loading) return <div className="min-h-screen bg-black flex items-center justify-center text-neon-blue uppercase tracking-widest">Scanning Galactic Records...</div>;
 
   return (
-    <div className="min-h-screen bg-[#020617] p-8 md:p-12 lg:p-24 relative overflow-hidden text-white font-mono">
-      <div className="starfield" />
+    <div className="min-h-screen p-8 md:p-12 lg:p-24 relative overflow-hidden text-white font-mono">
+      <Starfield />
       
       <header className="fixed top-0 left-0 w-full p-6 border-b border-white/10 bg-black/50 backdrop-blur-md z-50 flex justify-between items-center">
         <h2 className="text-2xl font-black text-star-wars-yellow uppercase tracking-tighter italic">PW // Rankings</h2>

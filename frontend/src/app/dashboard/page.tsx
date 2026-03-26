@@ -1,10 +1,11 @@
 'use client';
+// Force reload for Arena
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import RoundCard from '@/components/RoundCard';
 import SubmissionModal from '@/components/SubmissionModal';
-import Link from 'next/link';
+import Starfield from '@/components/Starfield';
 
 const API_BASE = 'http://localhost:5000/api';
 
@@ -20,11 +21,13 @@ export default function DashboardPage() {
   const fetchRounds = async () => {
     try {
       const res = await axios.get(`${API_BASE}/rounds`);
-      // Map database status to UI status
-      const mappedRounds = res.data.map((r: any) => ({
-        ...r,
-        status: r.is_active ? 'active' : (r.is_locked ? 'locked' : 'hidden')
-      }));
+      // Filter only active rounds for the user view
+      const mappedRounds = res.data
+        .filter((r: any) => r.is_active)
+        .map((r: any) => ({
+          ...r,
+          status: 'active'
+        }));
       setRounds(mappedRounds);
       setLoading(false);
     } catch (error) {
@@ -59,18 +62,11 @@ export default function DashboardPage() {
   if (loading) return <div className="min-h-screen flex items-center justify-center text-neon-blue uppercase tracking-widest animate-pulse">Initializing Arena...</div>;
 
   return (
-    <div className="min-h-screen p-8 pt-24 bg-[#020617]">
-      <div className="starfield" />
+    <div className="min-h-screen flex flex-col items-center justify-center p-8">
+      <Starfield />
       
-      <header className="fixed top-0 left-0 w-full p-6 border-b border-white/10 bg-black/50 backdrop-blur-md z-50 flex justify-between items-center">
-        <h2 className="text-2xl font-black text-star-wars-yellow uppercase tracking-tighter">PW // Arena</h2>
-        <div className="px-4 py-1 border border-neon-blue text-neon-blue text-xs uppercase font-bold tracking-widest">
-          Live Competition
-        </div>
-      </header>
-
-      <main className="max-w-6xl mx-auto py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <main className="w-full max-w-6xl mx-auto py-12 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-center justify-center">
           {rounds.map((round: any) => (
             <RoundCard 
               key={round.id} 
@@ -88,14 +84,6 @@ export default function DashboardPage() {
           onSubmit={handleSubmit}
         />
       )}
-
-      {/* Leaderboard Trigger */}
-      <div className="fixed bottom-8 right-8 z-50">
-        <Link href="/leaderboard" className="px-6 py-3 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 transition-colors flex items-center gap-3 backdrop-blur-md">
-          <span className="w-2 h-2 bg-neon-purple rounded-full animate-ping" />
-          <span className="text-xs font-bold uppercase tracking-widest">Hall of Rankings</span>
-        </Link>
-      </div>
     </div>
   );
 }

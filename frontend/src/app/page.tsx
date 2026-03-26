@@ -1,40 +1,24 @@
+import Starfield from '@/components/Starfield';
 import Link from 'next/link';
 
 export default function LandingPage() {
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen text-center p-6 sm:p-24 overflow-hidden">
-      <div className="starfield" />
+    <div className="relative flex items-center justify-center min-h-screen overflow-hidden">
+      <Starfield />
       
-      {/* Cinematic Heading */}
-      <h1 className="text-6xl md:text-8xl font-black tracking-tighter uppercase mb-6 text-star-wars-yellow drop-shadow-[0_0_15px_rgba(255,232,31,0.5)]">
-        Prompt Wars
-      </h1>
-      
-      <p className="text-xl md:text-2xl font-light text-slate-400 max-w-2xl mb-12 animate-pulse">
-        The ultimate AI competition. Test your prompting skills across Image, Text, and Code.
-      </p>
-
-      <div className="flex gap-6">
-        <Link 
-          href="/dashboard"
-          className="px-12 py-4 bg-neon-blue text-black font-bold uppercase tracking-widest rounded-sm hover:scale-105 transition-transform shadow-[0_0_20px_rgba(0,210,255,0.6)]"
-        >
-          Enter the Arena
-        </Link>
-      </div>
-
-      <div className="absolute bottom-12 w-full max-w-4xl grid grid-cols-3 gap-8 px-4 opacity-50">
-        <div className="text-center">
-          <span className="block text-neon-blue text-xs uppercase tracking-[0.3em] mb-1">Round 01</span>
-          <span className="text-sm font-bold">Image Prompting</span>
-        </div>
-        <div className="text-center border-x border-white/10">
-          <span className="block text-neon-purple text-xs uppercase tracking-[0.3em] mb-1">Round 02</span>
-          <span className="text-sm font-bold">Creative Text</span>
-        </div>
-        <div className="text-center">
-          <span className="block text-slate-500 text-xs uppercase tracking-[0.3em] mb-1">Round 03</span>
-          <span className="text-sm font-bold">The Secret Round</span>
+      {/* Cinematic Logo Only */}
+      <div className="relative z-10 flex flex-col items-center">
+        <h1 className="text-8xl md:text-[160px] font-black uppercase tracking-[-0.05em] text-white italic drop-shadow-[0_0_20px_rgba(255,255,255,0.4)] text-center">
+          PROMPT<br/>WARS
+        </h1>
+        
+        <div className="mt-12">
+          <Link 
+            href="/dashboard"
+            className="px-20 py-4 border border-white/20 hover:border-white text-white font-bold uppercase tracking-[1em] text-[10px] transition-all hover:bg-white/5 backdrop-blur-md"
+          >
+            Submit
+          </Link>
         </div>
       </div>
     </div>

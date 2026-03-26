@@ -70,7 +70,7 @@ model Score {
 }
 
 model Leaderboard {
-  user        User  @id @relation(fields: [user_id], references: [id])
-  user_id     Int   @unique
+  user        User  @relation(fields: [user_id], references: [id])
+  user_id     Int   @id @unique
   total_score Float @default(0)
 }
