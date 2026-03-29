@@ -3,6 +3,48 @@ import { prisma } from '../index';
 import { GeminiService } from '../services/geminiService';
 
 export class AdminController {
+  private static async pause(ms: number) {
+    await new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  private static getErrorReason(error: any) {
+    if (!error) return "Unknown evaluation error";
+
+    const direct = typeof error?.message === 'string' ? error.message : '';
+    const apiMessage =
+      error?.response?.data?.error?.message ||
+      error?.response?.data?.error ||
+      error?.error?.message ||
+      '';
+
+    const reason = (direct || apiMessage || '').toString().trim();
+    if (reason) return reason;
+
+    try {
+      return JSON.stringify(error);
+    } catch {
+      return "Unknown evaluation error";
+    }
+  }
+
+  private static async refreshLeaderboardForUser(userId: number) {
+    const aggregate = await prisma.score.aggregate({
+      _sum: { total_score: true },
+      where: {
+        submission: {
+          user_id: userId
+        }
+      }
+    });
+
+    const total = aggregate._sum.total_score || 0;
+    await prisma.leaderboard.upsert({
+      where: { user_id: userId },
+      update: { total_score: total },
+      create: { user_id: userId, total_score: total }
+    });
+  }
+
   static async listSubmissions(req: Request, res: Response) {
     const { round_id } = req.query;
     try {
@@ -11,6 +53,11 @@ export class AdminController {
         select: {
           id: true,
           user_id: true,
+          user: {
+            select: {
+              name: true
+            }
+          },
           round_id: true,
           is_evaluated: true,
           created_at: true,
@@ -61,6 +108,8 @@ export class AdminController {
         data: { is_evaluated: true }
       });
 
+      await AdminController.refreshLeaderboardForUser(submission.user_id);
+
       res.json({ message: "Evaluated successfully", results });
     } catch (error) {
       res.status(500).json({ error: "Evaluation failed" });
@@ -70,12 +119,17 @@ export class AdminController {
   static async evaluateRoundSequential(req: Request, res: Response) {
     const { roundId } = req.params;
     try {
+      if (![1, 2].includes(Number(roundId))) {
+        return res.status(400).json({ error: "Only Round 1 and Round 2 support AI evaluation" });
+      }
+
       const pending = await prisma.submission.findMany({
         where: { round_id: Number(roundId), is_evaluated: false },
         include: { round1_data: true, round2_data: true }
       });
 
-      const processed = [];
+      const processed: number[] = [];
+      const failed: Array<{ submission_id: number; reason: string }> = [];
       for (const sub of pending) {
         try {
           let results;
@@ -97,16 +151,32 @@ export class AdminController {
               where: { id: sub.id },
               data: { is_evaluated: true }
             });
+
+            await AdminController.refreshLeaderboardForUser(sub.user_id);
             processed.push(sub.id);
+          } else {
+            failed.push({ submission_id: sub.id, reason: "No evaluation result returned" });
           }
-          // Small delay to be extra safe with rate limits although service handles key rotation
-          await new Promise(resolve => setTimeout(resolve, 500));
-        } catch (e) {
+          // Keep evaluation pacing gentle to avoid quota spikes during events.
+          await AdminController.pause(1000);
+        } catch (e: any) {
+          if (GeminiService.isRateLimitedError(e)) {
+            console.warn(`Rate limit encountered while evaluating submission ${sub.id}. Cooling down for 20 seconds.`);
+            await AdminController.pause(20000);
+          }
+          failed.push({ submission_id: sub.id, reason: AdminController.getErrorReason(e) });
           console.error(`Failed to evaluate submission ${sub.id}`, e);
         }
       }
 
-      res.json({ message: `Processed ${processed.length} submissions`, processed_ids: processed });
+      res.json({
+        message: `Processed ${processed.length}/${pending.length} submissions`,
+        total_pending: pending.length,
+        processed_count: processed.length,
+        failed_count: failed.length,
+        processed_ids: processed,
+        failed
+      });
     } catch (error) {
       res.status(500).json({ error: "Bulk evaluation failed" });
     }

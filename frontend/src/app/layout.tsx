@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Orbitron } from "next/font/google";
 import "./globals.css";
+import SnackbarProvider from "@/components/SnackbarProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -38,7 +39,7 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/sf-distant-galaxy" />
       </head>
       <body className="min-h-full flex flex-col bg-[#020617] text-white selection:bg-star-wars-yellow selection:text-black font-sans">
-        {children}
+        <SnackbarProvider>{children}</SnackbarProvider>
       </body>
     </html>
   );

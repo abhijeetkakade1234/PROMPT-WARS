@@ -14,10 +14,9 @@ export class RoundService {
   }
 
   static async activateRound(roundId: number) {
-    // Transaction to ensure only one round is active
+    // Transaction to ensure only one round is active and all others are locked.
     return await prisma.$transaction([
       prisma.round.updateMany({
-        where: { is_active: true },
         data: { is_active: false, is_locked: true }
       }),
       prisma.round.update({
@@ -25,6 +24,26 @@ export class RoundService {
         data: { is_active: true, is_locked: false }
       })
     ]);
+  }
+
+  static async unlockRound(roundId: number) {
+    // Only one round can be unlocked at a time; unlocking another locks the rest.
+    return await prisma.$transaction([
+      prisma.round.updateMany({
+        data: { is_active: false, is_locked: true }
+      }),
+      prisma.round.update({
+        where: { id: roundId },
+        data: { is_active: false, is_locked: false }
+      })
+    ]);
+  }
+
+  static async deactivateRound(roundId: number) {
+    return await prisma.round.update({
+      where: { id: roundId },
+      data: { is_active: false, is_locked: true }
+    });
   }
 
   static async isRoundActionable(roundId: number) {

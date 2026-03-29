@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { prisma } from '../index';
-import { GeminiService } from '../services/geminiService';
 import { RoundService } from '../services/roundService';
+import { UserService } from '../services/userService';
 import { round1Schema, round2Schema, round3Schema } from '../utils/validation';
 
 export class SubmissionController {
@@ -9,7 +9,8 @@ export class SubmissionController {
     const validated = round1Schema.safeParse(req.body);
     if (!validated.success) return res.status(400).json({ error: validated.error.format() });
 
-    const { user_id, prompt_text } = validated.data;
+    const { user_id: participantId, prompt_text } = validated.data;
+    const user_id = await UserService.resolveParticipantUserId(participantId);
     const image_url = (req.file as any)?.path; // Cloudinary URL
     
     if (!image_url) return res.status(400).json({ error: "Image transmission failed (Cloudinary error)" });
@@ -54,7 +55,8 @@ export class SubmissionController {
     const validated = round2Schema.safeParse(req.body);
     if (!validated.success) return res.status(400).json({ error: validated.error.format() });
 
-    const { user_id, prompt_text, text_output } = validated.data;
+    const { user_id: participantId, prompt_text, text_output } = validated.data;
+    const user_id = await UserService.resolveParticipantUserId(participantId);
     const ip_address = req.ip;
     
     const isActive = await RoundService.isRoundActionable(2);
@@ -95,7 +97,8 @@ export class SubmissionController {
     const validated = round3Schema.safeParse(req.body);
     if (!validated.success) return res.status(400).json({ error: validated.error.format() });
 
-    const { user_id, prompt_1, prompt_2 } = validated.data;
+    const { user_id: participantId, prompt_1, prompt_2 } = validated.data;
+    const user_id = await UserService.resolveParticipantUserId(participantId);
     const ip_address = req.ip;
     
     const isActive = await RoundService.isRoundActionable(3);
