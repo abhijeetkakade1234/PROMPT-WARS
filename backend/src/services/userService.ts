@@ -15,18 +15,19 @@ export class UserService {
     const hash = createHash('sha256').update(participantId).digest('hex').slice(0, 10);
     const syntheticEmail = `${slug}-${hash}@promptwars.local`;
 
-    const existing = await prisma.user.findUnique({ where: { email: syntheticEmail } });
-    if (existing) return existing.id;
-
-    const created = await prisma.user.create({
-      data: {
+    const user = await prisma.user.upsert({
+      where: { email: syntheticEmail },
+      update: {
+        // Keep display name in sync with latest submitted participant id spelling.
+        name: normalizedName
+      },
+      create: {
         name: normalizedName,
         email: syntheticEmail,
         role: 'user'
-      }
+      },
     });
 
-    return created.id;
+    return user.id;
   }
 }
-

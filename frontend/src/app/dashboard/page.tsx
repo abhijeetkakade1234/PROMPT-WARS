@@ -3,6 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Link from 'next/link';
 import RoundCard from '@/components/RoundCard';
 import SubmissionModal from '@/components/SubmissionModal';
 import Starfield from '@/components/Starfield';
@@ -152,6 +153,14 @@ export default function DashboardPage() {
       <Starfield />
       
       <main className="w-full max-w-6xl mx-auto py-12 relative z-10">
+        <div className="mb-6 flex justify-end">
+          <Link
+            href="/leaderboard"
+            className="px-5 py-3 border border-neon-blue/60 text-neon-blue text-xs font-bold uppercase tracking-widest hover:bg-neon-blue/10"
+          >
+            Leaderboard
+          </Link>
+        </div>
         {errorMessage ? (
           <div className="mx-auto max-w-2xl border border-red-500/40 bg-red-500/10 px-6 py-5 text-center">
             <p className="text-sm uppercase tracking-widest text-red-300">{errorMessage}</p>

@@ -24,6 +24,7 @@ interface Submission {
   created_at: string;
   round1_data?: any;
   round2_data?: any;
+  round3_data?: any;
   scores?: Array<{ total_score: number }>;
 }
 
@@ -39,7 +40,7 @@ export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const [roundsError, setRoundsError] = useState<string | null>(null);
-  const [submissionFilter, setSubmissionFilter] = useState<'all' | '1' | '2'>('all');
+  const [submissionFilter, setSubmissionFilter] = useState<'all' | '1' | '2' | '3'>('all');
 
   const axiosConfig = {
     headers: { 'X-Admin-Token': adminKey }
@@ -307,7 +308,7 @@ export default function AdminPage() {
               <div className="flex justify-between items-center mb-8">
                 <h2 className="text-xl font-bold uppercase tracking-tighter text-white">Transmission History</h2>
                 <div className="flex gap-4">
-                  {[1, 2].map(rid => (
+                  {[1, 2, 3].map(rid => (
                     <button 
                       key={rid}
                       onClick={() => evaluateAll(rid)}
@@ -323,11 +324,12 @@ export default function AdminPage() {
                 {[
                   { key: 'all', label: 'All' },
                   { key: '1', label: 'Round 1' },
-                  { key: '2', label: 'Round 2' }
+                  { key: '2', label: 'Round 2' },
+                  { key: '3', label: 'Round 3' }
                 ].map((opt) => (
                   <button
                     key={opt.key}
-                    onClick={() => setSubmissionFilter(opt.key as 'all' | '1' | '2')}
+                    onClick={() => setSubmissionFilter(opt.key as 'all' | '1' | '2' | '3')}
                     className={`px-3 py-1 text-[10px] uppercase tracking-widest border ${submissionFilter === opt.key ? 'border-neon-blue text-neon-blue bg-neon-blue/10' : 'border-white/20 text-slate-400 hover:bg-white/5'}`}
                   >
                     {opt.label}
@@ -367,10 +369,15 @@ export default function AdminPage() {
                                   <p className="text-[11px] text-slate-200 line-clamp-2">{sub.round1_data?.prompt_text || '-'}</p>
                                 </div>
                               </div>
-                            ) : (
+                            ) : sub.round_id === 2 ? (
                               <div className="max-w-[280px]">
                                 <p className="text-[11px] text-slate-200 line-clamp-2">{sub.round2_data?.prompt_text || '-'}</p>
                                 <p className="text-[10px] text-slate-500 line-clamp-1 mt-1">{sub.round2_data?.text_output || '-'}</p>
+                              </div>
+                            ) : (
+                              <div className="max-w-[280px]">
+                                <p className="text-[11px] text-slate-200 line-clamp-2">{sub.round3_data?.prompt_1 || '-'}</p>
+                                <p className="text-[10px] text-slate-500 line-clamp-1 mt-1">{sub.round3_data?.prompt_2 || '-'}</p>
                               </div>
                             )}
                           </td>

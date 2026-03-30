@@ -80,7 +80,7 @@ export class AdminController {
     try {
       const submission = await prisma.submission.findUnique({
         where: { id: Number(id) },
-        include: { round1_data: true, round2_data: true }
+        include: { round1_data: true, round2_data: true, round3_data: true }
       });
 
       if (!submission) return res.status(404).json({ error: "Submission not found" });
@@ -91,6 +91,8 @@ export class AdminController {
         results = await GeminiService.evaluateImage(submission.round1_data.prompt_text, submission.round1_data.image_url);
       } else if (submission.round_id === 2 && submission.round2_data) {
         results = await GeminiService.evaluateText(submission.round2_data.prompt_text, submission.round2_data.text_output);
+      } else if (submission.round_id === 3 && submission.round3_data) {
+        results = await GeminiService.evaluateRound3(submission.round3_data.prompt_1, submission.round3_data.prompt_2);
       } else {
         return res.status(400).json({ error: "Unsupported round for AI evaluation" });
       }
@@ -119,13 +121,13 @@ export class AdminController {
   static async evaluateRoundSequential(req: Request, res: Response) {
     const { roundId } = req.params;
     try {
-      if (![1, 2].includes(Number(roundId))) {
-        return res.status(400).json({ error: "Only Round 1 and Round 2 support AI evaluation" });
+      if (![1, 2, 3].includes(Number(roundId))) {
+        return res.status(400).json({ error: "Only Round 1, Round 2, and Round 3 support AI evaluation" });
       }
 
       const pending = await prisma.submission.findMany({
         where: { round_id: Number(roundId), is_evaluated: false },
-        include: { round1_data: true, round2_data: true }
+        include: { round1_data: true, round2_data: true, round3_data: true }
       });
 
       const processed: number[] = [];
@@ -137,6 +139,8 @@ export class AdminController {
             results = await GeminiService.evaluateImage(sub.round1_data.prompt_text, sub.round1_data.image_url);
           } else if (sub.round_id === 2 && sub.round2_data) {
             results = await GeminiService.evaluateText(sub.round2_data.prompt_text, sub.round2_data.text_output);
+          } else if (sub.round_id === 3 && sub.round3_data) {
+            results = await GeminiService.evaluateRound3(sub.round3_data.prompt_1, sub.round3_data.prompt_2);
           }
 
           if (results) {

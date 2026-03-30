@@ -3,8 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
 
-dotenv.config({ path: '.env.local' });
-dotenv.config();
+dotenv.config({ path: '.env.local', quiet: true });
+dotenv.config({ quiet: true });
 
 import apiRoutes from './routes/api';
 import rateLimit from 'express-rate-limit';
@@ -61,6 +61,8 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 
+// Render/other reverse proxies forward client IP in X-Forwarded-For.
+app.set('trust proxy', 1);
 app.use(limiter);
 app.use(cors({
   origin: (origin, callback) => {
