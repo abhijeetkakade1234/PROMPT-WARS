@@ -26,12 +26,28 @@ const prisma = new PrismaClient();
 const PORT = process.env.PORT || 5000;
 const defaultAllowedOrigins = ['http://localhost:3000', 'http://127.0.0.1:3000'];
 
-const configuredOrigins = (process.env.FRONTEND_URL || '')
+const normalizeOrigin = (value: string): string | null => {
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+
+  try {
+    return new URL(trimmed).origin.toLowerCase();
+  } catch {
+    return null;
+  }
+};
+
+const configuredOrigins = (process.env.FRONTEND_URL || process.env.CORS_ORIGINS || '')
   .split(',')
-  .map((origin) => origin.trim())
+  .map((origin) => normalizeOrigin(origin))
   .filter(Boolean);
 
-const allowedOrigins = Array.from(new Set([...defaultAllowedOrigins, ...configuredOrigins]));
+const allowedOrigins = Array.from(
+  new Set([
+    ...defaultAllowedOrigins.map((origin) => normalizeOrigin(origin)).filter(Boolean),
+    ...configuredOrigins
+  ])
+) as string[];
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -43,7 +59,8 @@ const limiter = rateLimit({
 app.use(limiter);
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    const normalizedOrigin = origin ? normalizeOrigin(origin) : null;
+    if (!origin || (normalizedOrigin && allowedOrigins.includes(normalizedOrigin))) {
       callback(null, true);
       return;
     }

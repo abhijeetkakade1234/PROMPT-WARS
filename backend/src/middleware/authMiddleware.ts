@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-const ADMIN_SECRET = process.env.ADMIN_SECRET || 'galactic-admin-secret-2026';
+const ADMIN_SECRET = process.env.ADMIN_SECRET;
 
 export const adminAuth = (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers['x-admin-token'];
