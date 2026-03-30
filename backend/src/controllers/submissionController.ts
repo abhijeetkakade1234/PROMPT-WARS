@@ -20,19 +20,6 @@ export class SubmissionController {
     const isActive = await RoundService.isRoundActionable(1);
     if (!isActive) return res.status(403).json({ error: "Round 1 is locked or inactive" });
 
-    // Anti-spam: check if this IP or UserID already submitted for this round
-    const existing = await prisma.submission.findFirst({
-      where: {
-        round_id: 1,
-        OR: [
-          { ip_address },
-          { user_id }
-        ]
-      }
-    });
-
-    if (existing) return res.status(403).json({ error: "Transmission Blocked: Neural Signature or IP already recorded for this round." });
-
     try {
       const submission = await prisma.submission.create({
         data: {
@@ -62,19 +49,6 @@ export class SubmissionController {
     const isActive = await RoundService.isRoundActionable(2);
     if (!isActive) return res.status(403).json({ error: "Round 2 is locked or inactive" });
 
-    // Anti-spam: check if this IP or UserID already submitted for this round
-    const existing = await prisma.submission.findFirst({
-      where: {
-        round_id: 2,
-        OR: [
-          { ip_address },
-          { user_id }
-        ]
-      }
-    });
-
-    if (existing) return res.status(403).json({ error: "Transmission Blocked: Neural Signature or IP already recorded for this round." });
-
     try {
       const submission = await prisma.submission.create({
         data: {
@@ -103,19 +77,6 @@ export class SubmissionController {
     
     const isActive = await RoundService.isRoundActionable(3);
     if (!isActive) return res.status(403).json({ error: "Round 3 is hidden or inactive" });
-
-    // Anti-spam: check if this IP or UserID already submitted for this round
-    const existing = await prisma.submission.findFirst({
-      where: {
-        round_id: 3,
-        OR: [
-          { ip_address },
-          { user_id }
-        ]
-      }
-    });
-
-    if (existing) return res.status(403).json({ error: "Transmission Blocked: Neural Signature or IP already recorded for this round." });
 
     if (!prompt_1 || !prompt_2) {
       return res.status(400).json({ error: "At least two prompts are required" });

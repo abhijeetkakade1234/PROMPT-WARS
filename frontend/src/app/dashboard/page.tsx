@@ -7,6 +7,7 @@ import RoundCard from '@/components/RoundCard';
 import SubmissionModal from '@/components/SubmissionModal';
 import Starfield from '@/components/Starfield';
 import { API_BASE } from '@/lib/api';
+import { isRoundBlockedForBrowser, markRoundSubmittedForBrowser } from '@/lib/browserRoundGate';
 import { useSnackbar } from '@/components/SnackbarProvider';
 
 interface UiRound {
@@ -68,6 +69,11 @@ export default function DashboardPage() {
 
   const handleSubmit = async (data: any) => {
     if (!selectedRound) return;
+    if (isRoundBlockedForBrowser(selectedRound)) {
+      showSnackbar({ message: "This browser already submitted for this round.", variant: 'error' });
+      setSelectedRound(null);
+      return;
+    }
 
     try {
       const endpoint = `${API_BASE}/submit/round${selectedRound}`;
@@ -109,6 +115,7 @@ export default function DashboardPage() {
       }
 
       showSnackbar({ message: "Submission transmitted successfully.", variant: 'success' });
+      markRoundSubmittedForBrowser(selectedRound);
       setParticipantId(data.userId);
       if (typeof window !== 'undefined') {
         window.localStorage.setItem('promptWarsParticipantId', data.userId);
@@ -160,7 +167,12 @@ export default function DashboardPage() {
                 key={round.id} 
                 round={round} 
                 onEnter={() => {
-                  if (round.status === 'active') setSelectedRound(round.id);
+                  if (round.status !== 'active') return;
+                  if (isRoundBlockedForBrowser(round.id)) {
+                    showSnackbar({ message: "This browser already submitted for this round.", variant: 'error' });
+                    return;
+                  }
+                  setSelectedRound(round.id);
                 }}
               />
             ))}
