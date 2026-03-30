@@ -27,18 +27,23 @@ const PORT = process.env.PORT || 5000;
 const defaultAllowedOrigins = ['http://localhost:3000', 'http://127.0.0.1:3000'];
 
 const normalizeOrigin = (value: string): string | null => {
-  const trimmed = value.trim();
+  const trimmed = value.trim().replace(/^['"]|['"]$/g, '');
   if (!trimmed) return null;
 
   try {
     return new URL(trimmed).origin.toLowerCase();
   } catch {
-    return null;
+    try {
+      // Accept hostnames provided without protocol in env.
+      return new URL(`https://${trimmed}`).origin.toLowerCase();
+    } catch {
+      return null;
+    }
   }
 };
 
 const configuredOrigins = (process.env.FRONTEND_URL || process.env.CORS_ORIGINS || '')
-  .split(',')
+  .split(/[,\n;]/)
   .map((origin) => normalizeOrigin(origin))
   .filter(Boolean);
 
@@ -82,6 +87,7 @@ async function bootstrap() {
   try {
     assertEnv();
     await prisma.$connect();
+    console.log(`[startup] CORS allowed origins: ${allowedOrigins.join(', ')}`);
 
     app.listen(PORT, () => {
       console.log(`PROMPT WARS Backend running at http://localhost:${PORT}`);
